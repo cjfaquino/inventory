@@ -1,7 +1,13 @@
-import createError from 'http-errors';
+import createError, { HttpError } from 'http-errors';
 import express, { ErrorRequestHandler } from 'express';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import createHttpError from 'http-errors';
+
+// setup env variables
+dotenv.config();
 
 const indexRouter = require('./routes/index');
 
@@ -37,3 +43,17 @@ const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
 app.use(errorHandler);
 
 module.exports = app;
+
+// setup mongoose connection
+mongoose.set('strictQuery', false);
+const mongoDB = process.env.MONGODB_URL;
+
+const main = async () => {
+  if (!mongoDB) {
+    throw createHttpError(404, 'MongDB not found');
+  }
+  console.time('MongoDB connected');
+  await mongoose.connect(mongoDB);
+  console.timeEnd('MongoDB connected');
+};
+main().catch((err) => console.log(err));
