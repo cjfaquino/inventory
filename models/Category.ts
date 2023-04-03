@@ -1,13 +1,18 @@
-import { Schema } from 'mongoose';
+import { Schema, model } from 'mongoose';
 
-const Category = new Schema({
+export interface ICategory {
+  name: string;
+  description: string;
+}
+
+const CategorySchema = new Schema<ICategory>({
   name: { type: String, required: true },
   description: { type: String, required: true },
 });
 
 // virtual for Category's URL
-Category.virtual('url').get(function () {
+CategorySchema.virtual('url').get(function () {
   return `/catalog/${this.name}`;
 });
 
-export default Category;
+export default model<ICategory>('Category', CategorySchema);
