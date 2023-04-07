@@ -26,7 +26,7 @@ app.use(cookieParser());
 app.use(express.static('./public'));
 
 app.use('/', indexRouter);
-app.use('/:category', categoryRouter);
+app.use('/catalog', categoryRouter);
 app.use('/:category/:item', itemRouter);
 
 // catch 404 and forward to error handler

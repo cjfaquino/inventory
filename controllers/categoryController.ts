@@ -9,8 +9,8 @@ export const index: RequestHandler = async (req, res, next) => {
 };
 
 // display detail GET route for category
-export const category_detail: RequestHandler = (req, res) => {
-  res.send('category_detail GET');
+export const category_detail: RequestHandler = (req, res, next) => {
+  res.render('category_detail', { title: req.params.category });
 };
 
 // display create category GET route
