@@ -15,7 +15,7 @@ const app = express();
 
 // view engine setup
 app.set('views', './views');
-app.set('view engine', 'jade');
+app.set('view engine', 'pug');
 
 app.use(logger('dev'));
 app.use(express.json());
