@@ -21,4 +21,4 @@ ItemSchema.virtual('url').get(function () {
   return `/catalog/${this._id}`;
 });
 
-export default model<IItem>('Category', ItemSchema);
+export default model<IItem>('Item', ItemSchema);
