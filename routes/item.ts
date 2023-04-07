@@ -10,18 +10,18 @@ import {
 } from '../controllers/itemController';
 const itemRouter = express.Router();
 
-itemRouter.get('/', item_detail);
+itemRouter.get('/:item/', item_detail);
 
-itemRouter.get('/create', item_create_get);
+itemRouter.get('/:item/create', item_create_get);
 
-itemRouter.post('/create', item_create_post);
+itemRouter.post('/:item/create', item_create_post);
 
-itemRouter.get('/update', item_update_get);
+itemRouter.get('/:item/update', item_update_get);
 
-itemRouter.post('/update', item_update_post);
+itemRouter.post('/:item/update', item_update_post);
 
-itemRouter.get('/delete', item_delete_get);
+itemRouter.get('/:item/delete', item_delete_get);
 
-itemRouter.post('/delete', item_delete_post);
+itemRouter.post('/:item/delete', item_delete_post);
 
 export default itemRouter;

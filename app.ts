@@ -27,7 +27,7 @@ app.use(express.static('./public'));
 
 app.use('/', indexRouter);
 app.use('/catalog', categoryRouter);
-app.use('/:category/:item', itemRouter);
+app.use('/product/', itemRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

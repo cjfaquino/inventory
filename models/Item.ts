@@ -18,7 +18,7 @@ const ItemSchema = new Schema<IItem>({
 
 // virtual for Item's URL
 ItemSchema.virtual('url').get(function () {
-  return `/catalog/${this._id}`;
+  return `/product/${this._id}`;
 });
 
 export default model<IItem>('Item', ItemSchema);

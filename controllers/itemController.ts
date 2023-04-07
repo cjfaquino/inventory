@@ -8,8 +8,8 @@ export const item_list: RequestHandler = (req, res) => {
 };
 
 // display detail GET route for item
-export const item_detail: RequestHandler = (req, res) => {
-  res.send('item_detail GET');
+export const item_detail: RequestHandler = (req, res, next) => {
+  res.render('item_detail', { title: req.params.item });
 };
 
 // display create item GET route
