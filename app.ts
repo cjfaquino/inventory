@@ -11,6 +11,7 @@ dotenv.config();
 
 import indexRouter from './routes';
 import categoryRouter from './routes/category';
+import itemRouter from './routes/item';
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use(express.static('./public'));
 
 app.use('/', indexRouter);
 app.use('/:category', categoryRouter);
+app.use('/:category/:item', itemRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
