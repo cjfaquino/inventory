@@ -1,8 +1,8 @@
 import express from 'express';
 import { index } from '../controllers/categoryController';
-const router = express.Router();
+const indexRouter = express.Router();
 
 /* GET home page. */
-router.get('/', index);
+indexRouter.get('/', index);
 
-module.exports = router;
+export default indexRouter;

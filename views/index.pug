@@ -2,3 +2,8 @@ extends layout
 
 block content
   h1= title
+  if categories 
+    ul 
+      each val in categories
+        li 
+          a(href=val.url)= val.name

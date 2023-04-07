@@ -3,10 +3,9 @@ import Category from '../models/Category';
 import { RequestHandler } from 'express';
 
 // display all categories
-export const index: RequestHandler = (req, res) => {
-  res.render('index', {
-    title: 'Store',
-  });
+export const index: RequestHandler = async (req, res, next) => {
+  const list = await Category.find().sort({ name: 1 });
+  res.render('index', { title: 'Store', categories: list });
 };
 
 // display detail GET route for category

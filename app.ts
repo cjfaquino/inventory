@@ -9,7 +9,8 @@ import createHttpError from 'http-errors';
 // setup env variables
 dotenv.config();
 
-const indexRouter = require('./routes/index');
+import indexRouter from './routes';
+import categoryRouter from './routes/category';
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use(cookieParser());
 app.use(express.static('./public'));
 
 app.use('/', indexRouter);
+app.use('/:category', categoryRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
