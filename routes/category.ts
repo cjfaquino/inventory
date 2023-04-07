@@ -10,18 +10,18 @@ import {
 } from '../controllers/categoryController';
 const categoryRouter = express.Router();
 
-categoryRouter.get('/:category/', category_detail);
+categoryRouter.get('/:id/', category_detail);
 
-categoryRouter.get('/:category/create', category_create_get);
+categoryRouter.get('/:id/create', category_create_get);
 
-categoryRouter.post('/:category/create', category_create_post);
+categoryRouter.post('/:id/create', category_create_post);
 
-categoryRouter.get('/:category/update', category_update_get);
+categoryRouter.get('/:id/update', category_update_get);
 
-categoryRouter.post('/:category/update', category_update_post);
+categoryRouter.post('/:id/update', category_update_post);
 
-categoryRouter.get('/:category/delete', category_delete_get);
+categoryRouter.get('/:id/delete', category_delete_get);
 
-categoryRouter.post('/:category/delete', category_delete_post);
+categoryRouter.post('/:id/delete', category_delete_post);
 
 export default categoryRouter;
