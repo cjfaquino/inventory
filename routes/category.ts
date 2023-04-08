@@ -10,11 +10,11 @@ import {
 } from '../controllers/categoryController';
 const categoryRouter = express.Router();
 
+categoryRouter.get('/create', category_create_get);
+
+categoryRouter.post('/create', category_create_post);
+
 categoryRouter.get('/:id/', category_detail);
-
-categoryRouter.get('/:id/create', category_create_get);
-
-categoryRouter.post('/:id/create', category_create_post);
 
 categoryRouter.get('/:id/update', category_update_get);
 
