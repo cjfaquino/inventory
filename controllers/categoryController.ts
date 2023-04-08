@@ -2,6 +2,7 @@ import async from 'async';
 import Category from '../models/Category';
 import { RequestHandler } from 'express';
 import Item from '../models/Item';
+import createHttpError from 'http-errors';
 
 // display all categories
 export const index: RequestHandler = async (req, res, next) => {
@@ -11,10 +12,26 @@ export const index: RequestHandler = async (req, res, next) => {
 
 // display detail GET route for category
 export const category_detail: RequestHandler = async (req, res, next) => {
-  // get all items with category
-  const list = await Item.find({ category: req.params.id });
+  try {
+    // get category object
+    const categoryPromise = Category.findById(req.params.id);
 
-  res.render('category_detail', { title: req.params.category, items: list });
+    // get all items with category
+    const listPromise = Item.find({ category: req.params.id });
+
+    const [category, list] = await Promise.all([categoryPromise, listPromise]);
+
+    if (category === null) {
+      // no results
+      const err = createHttpError(404, 'Category not found');
+      return next(err);
+    }
+
+    // success, so render
+    res.render('category_detail', { title: category.name, items: list });
+  } catch (error) {
+    return next(error);
+  }
 };
 
 // display create category GET route
