@@ -3,6 +3,7 @@ import { Schema, model } from 'mongoose';
 export interface ICategory {
   name: string;
   description: string;
+  url: string;
 }
 
 const CategorySchema = new Schema<ICategory>({

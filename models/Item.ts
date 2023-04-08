@@ -7,6 +7,9 @@ export interface IItem {
   category: Types.ObjectId;
   price: number;
   stock: number;
+  url: string;
+  price_formatted: string;
+  totalVal: string;
 }
 
 const ItemSchema = new Schema<IItem>({
