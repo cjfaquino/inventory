@@ -1,4 +1,5 @@
 import { Schema, Types, model } from 'mongoose';
+import currencyFormat from '../utilities/currencyFormat';
 
 export interface IItem {
   name: string;
@@ -19,6 +20,16 @@ const ItemSchema = new Schema<IItem>({
 // virtual for Item's URL
 ItemSchema.virtual('url').get(function () {
   return `/product/${this._id}`;
+});
+
+// virtual for Item's price formatted
+ItemSchema.virtual('price_formatted').get(function () {
+  return currencyFormat([this]);
+});
+
+// virtual for Item's total value
+ItemSchema.virtual('totalVal').get(function () {
+  return currencyFormat([this], true);
 });
 
 export default model<IItem>('Item', ItemSchema);

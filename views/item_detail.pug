@@ -3,6 +3,8 @@ extends layout
 block content 
   h1= title
   p= item.description
+  p= item.price_formatted
+  p= item.stock
   if item.stock <= 25
     p= `Only ${item.stock} left!`
-  p= item.price
+  p= item.totalVal
