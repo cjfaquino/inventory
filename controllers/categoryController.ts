@@ -3,6 +3,9 @@ import Category from '../models/Category';
 import { RequestHandler } from 'express';
 import Item from '../models/Item';
 import createHttpError from 'http-errors';
+import currencyFormat from '../utilities/currencyFormat';
+import quantityFormat from '../utilities/quantityFormat';
+import numberFormat from '../utilities/numberFormat';
 
 // display all categories
 export const index: RequestHandler = async (req, res, next) => {
@@ -18,16 +21,15 @@ export const index: RequestHandler = async (req, res, next) => {
       itemPromise,
     ]);
 
-    const totalQty = items.reduce((total, obj) => obj.stock + total, 0);
-
-    let totalVal = items
-      .reduce((total, obj) => obj.price + total, 0)
-      .toFixed(2);
-    totalVal = '$' + totalVal;
+    const totalQty = quantityFormat(items);
+    const totalVal = currencyFormat(items, true);
 
     const stats = {
-      categories: { name: 'Categories', number: categories.length },
-      items: { name: 'Items', number: items.length },
+      categories: {
+        name: 'Categories',
+        number: numberFormat(categories.length),
+      },
+      items: { name: 'Items', number: numberFormat(items.length) },
       totalQty: { name: 'Total Quantity', number: totalQty },
       totalVal: { name: 'Total Value', number: totalVal },
     };
@@ -55,13 +57,11 @@ export const category_detail: RequestHandler = async (req, res, next) => {
       return next(err);
     }
 
-    const totalQty = list.reduce((total, obj) => obj.stock + total, 0);
-
-    let totalVal = list.reduce((total, obj) => obj.price + total, 0).toFixed(2);
-    totalVal = '$' + totalVal;
+    const totalQty = quantityFormat(list);
+    const totalVal = currencyFormat(list, true);
 
     const stats = {
-      items: { name: 'Items', number: list.length },
+      items: { name: 'Items', number: numberFormat(list.length) },
       totalQty: { name: 'Total Quantity', number: totalQty },
       totalVal: { name: 'Total Value', number: totalVal },
     };
