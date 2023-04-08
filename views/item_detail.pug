@@ -2,3 +2,7 @@ extends layout
 
 block content 
   h1= title
+  p= item.description
+  if item.stock <= 25
+    p= `Only ${item.stock} left!`
+  p= item.price
