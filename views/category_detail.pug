@@ -2,13 +2,15 @@ extends layout
 
 block content 
   h1= title
-  ul 
-    each item in items 
-      li
-        a(href=item.url)= item.name
-        p= item.description 
-        p= item.stock
-        p= '$'+item.price
   ul
     each stat in stats 
       li= `${stat.name}: ${stat.number}`
+  section 
+    h2 Items
+    ul 
+      each item in items 
+        li
+          a(href=item.url)= item.name
+          p= item.description 
+          p= item.stock
+          p= '$'+item.price
