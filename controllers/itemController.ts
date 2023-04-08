@@ -2,6 +2,7 @@ import async from 'async';
 import Item from '../models/Item';
 import { RequestHandler } from 'express';
 import createHttpError from 'http-errors';
+import Category from '../models/Category';
 
 // display all items
 export const item_list: RequestHandler = (req, res) => {
@@ -23,8 +24,14 @@ export const item_detail: RequestHandler = async (req, res, next) => {
 };
 
 // display create item GET route
-export const item_create_get: RequestHandler = (req, res) => {
-  res.send('item_create_get');
+export const item_create_get: RequestHandler = async (req, res, next) => {
+  try {
+    const categories = await Category.find().sort({ name: 1 });
+
+    res.render('item_form', { title: 'Create Item', categories });
+  } catch (error) {
+    return next(error);
+  }
 };
 
 // handle item create POST route

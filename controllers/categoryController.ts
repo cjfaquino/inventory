@@ -74,8 +74,8 @@ export const category_detail: RequestHandler = async (req, res, next) => {
 };
 
 // display create category GET route
-export const category_create_get: RequestHandler = (req, res) => {
-  res.send('category_create_get');
+export const category_create_get: RequestHandler = (req, res, next) => {
+  res.render('category_form', { title: 'Create Category' });
 };
 
 // handle category create POST route

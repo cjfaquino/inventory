@@ -1,0 +1,20 @@
+extends layout 
+
+block content 
+  h1= title
+  form(action="", method="post") 
+    label Name
+      input#name(type="text", name='name' required)
+    label Description 
+      textarea#description(name="description", required) 
+    label Category 
+      select#category(name="category" , required)
+        option(value="default", disabled, selected) Please select a category 
+        each category in categories 
+          option(value=category._id)= category.name
+    label Quantity 
+      input#stock(type="number", name="stock", required)
+    label Price 
+      input#price(type="number", name="price", required)
+    
+    button(type="submit") Create

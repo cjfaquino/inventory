@@ -1,0 +1,10 @@
+extends layout 
+
+block content 
+  h1= title
+  form(action="", method="post") 
+    label Name
+      input#name(type="text", name='name' required)
+    label Description 
+      textarea#description(name="description")
+    button(type="submit") Create
