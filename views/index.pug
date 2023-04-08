@@ -7,3 +7,6 @@ block content
       each val in categories
         li 
           a(href=val.url)= val.name
+  ul
+    each stat in stats 
+      li= `${stat.name}: ${stat.number}`

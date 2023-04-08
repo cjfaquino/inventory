@@ -6,8 +6,36 @@ import createHttpError from 'http-errors';
 
 // display all categories
 export const index: RequestHandler = async (req, res, next) => {
-  const list = await Category.find().sort({ name: 1 });
-  res.render('index', { title: 'Store', categories: list });
+  try {
+    // get all categories
+    const categoryPromise = Category.find().sort({ name: 1 });
+
+    // get all items
+    const itemPromise = Item.find();
+
+    const [categories, items] = await Promise.all([
+      categoryPromise,
+      itemPromise,
+    ]);
+
+    const totalQty = items.reduce((total, obj) => obj.stock + total, 0);
+
+    let totalVal = items
+      .reduce((total, obj) => obj.price + total, 0)
+      .toFixed(2);
+    totalVal = '$' + totalVal;
+
+    const stats = {
+      categories: { name: 'Categories', number: categories.length },
+      items: { name: 'Items', number: items.length },
+      totalQty: { name: 'Total Quantity', number: totalQty },
+      totalVal: { name: 'Total Value', number: totalVal },
+    };
+
+    res.render('index', { title: 'Store', categories, stats });
+  } catch (error) {
+    return next(error);
+  }
 };
 
 // display detail GET route for category
@@ -27,8 +55,19 @@ export const category_detail: RequestHandler = async (req, res, next) => {
       return next(err);
     }
 
+    const totalQty = list.reduce((total, obj) => obj.stock + total, 0);
+
+    let totalVal = list.reduce((total, obj) => obj.price + total, 0).toFixed(2);
+    totalVal = '$' + totalVal;
+
+    const stats = {
+      items: { name: 'Items', number: list.length },
+      totalQty: { name: 'Total Quantity', number: totalQty },
+      totalVal: { name: 'Total Value', number: totalVal },
+    };
+
     // success, so render
-    res.render('category_detail', { title: category.name, items: list });
+    res.render('category_detail', { title: category.name, items: list, stats });
   } catch (error) {
     return next(error);
   }

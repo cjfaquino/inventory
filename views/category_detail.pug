@@ -7,4 +7,8 @@ block content
       li
         a(href=item.url)= item.name
         p= item.description 
-        p= item.price
+        p= item.stock
+        p= '$'+item.price
+  ul
+    each stat in stats 
+      li= `${stat.name}: ${stat.number}`
