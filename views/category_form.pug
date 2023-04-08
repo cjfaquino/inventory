@@ -4,7 +4,12 @@ block content
   h1= title
   form(action="", method="post") 
     label Name
-      input#name(type="text", name='name' required)
+      input#name(type="text", name='name', value=(undefined===category ? '' : category.name), required)
     label Description 
-      textarea#description(name="description")
+      textarea#description(name="description", required)= (undefined===category ? '' : category.description)
     button(type="submit") Create
+
+  if errors
+   ul
+    for error in errors
+     li!= error.msg

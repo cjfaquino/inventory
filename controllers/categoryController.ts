@@ -6,6 +6,7 @@ import createHttpError from 'http-errors';
 import currencyFormat from '../utilities/currencyFormat';
 import quantityFormat from '../utilities/quantityFormat';
 import numberFormat from '../utilities/numberFormat';
+import { ValidationChain, body, validationResult } from 'express-validator';
 
 // display all categories
 export const index: RequestHandler = async (req, res, next) => {
@@ -79,9 +80,52 @@ export const category_create_get: RequestHandler = (req, res, next) => {
 };
 
 // handle category create POST route
-export const category_create_post: RequestHandler = (req, res) => {
-  res.send('category_create_post');
-};
+export const category_create_post: [
+  ValidationChain,
+  ValidationChain,
+  RequestHandler
+] = [
+  // validate & sanitize fields
+  body('name', 'Name is required.').trim().isLength({ min: 1 }).escape(),
+  body('description', 'Description is required.')
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+
+  // process request after validation & sanitization
+  async (req, res, next) => {
+    // extract the validation errors from request
+    const errors = validationResult(req);
+
+    // create Category object with request
+    const category = new Category(req.body);
+
+    if (!errors.isEmpty()) {
+      // there are errors, render form again with sanitized values/ error messages
+      res.render('category_form', {
+        title: 'Create Category',
+        category,
+        errors: errors.array(),
+      });
+      return;
+    } else {
+      // data from form is valid
+      // check if category already exists
+      const found = await Category.findOne({ name: req.body.name });
+      if (found) {
+        // genre exists, redirect to its detail page
+        res.redirect(found.url);
+      } else {
+        category
+          .save()
+          .then((saved) => {
+            res.redirect(saved.url);
+          })
+          .catch((err) => next(err));
+      }
+    }
+  },
+];
 
 // display update category GET route
 export const category_update_get: RequestHandler = (req, res) => {
