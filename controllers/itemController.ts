@@ -1,6 +1,7 @@
 import async from 'async';
 import Item from '../models/Item';
 import { RequestHandler } from 'express';
+import createHttpError from 'http-errors';
 
 // display all items
 export const item_list: RequestHandler = (req, res) => {
@@ -8,8 +9,17 @@ export const item_list: RequestHandler = (req, res) => {
 };
 
 // display detail GET route for item
-export const item_detail: RequestHandler = (req, res, next) => {
-  res.render('item_detail', { title: req.params.item });
+export const item_detail: RequestHandler = async (req, res, next) => {
+  // get item from id parameter
+  const found = await Item.findOne({ _id: req.params.id });
+  if (found === null) {
+    // no results
+    const err = createHttpError(404, 'Item not found');
+    return next(err);
+  }
+
+  // success, so render
+  res.render('item_detail', { title: found.name, item: found });
 };
 
 // display create item GET route
