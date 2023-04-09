@@ -4,17 +4,25 @@ block content
   h1= title
   form(action="", method="post") 
     label Name
-      input#name(type="text", name='name' required)
+      input#name(type="text", name='name', value=(undefined===item ? '' : item.name), required)
     label Description 
-      textarea#description(name="description", required) 
+      textarea#description(name="description", required) #{(undefined===item ? '' : item.description)},
     label Category 
       select#category(name="category" , required)
         option(value="default", disabled, selected) Please select a category 
         each category in categories 
-          option(value=category._id)= category.name
+          if item
+            option(value=category._id, selected=(item.category._id.toString()===category._id.toString() ? 'selected' : false)) #{category.name}
+          else
+            option(value=category._id)= category.name
     label Quantity 
-      input#stock(type="number", name="stock", required)
+      input#stock(type="number", name="stock", value=(undefined===item ? '' : item.stock), required)
     label Price 
-      input#price(type="number", name="price", required)
+      input#price(type="number", name="price", value=(undefined===item ? '' : item.price), required)
     
     button(type="submit") Create
+  
+  if errors
+   ul
+    for error in errors
+     li!= error.msg
