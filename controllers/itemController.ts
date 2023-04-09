@@ -116,11 +116,37 @@ export const item_update_post: RequestHandler = (req, res) => {
 };
 
 // display item delete GET route
-export const item_delete_get: RequestHandler = (req, res) => {
-  res.send('item_delete_get');
+export const item_delete_get: RequestHandler = async (req, res, next) => {
+  try {
+    const item = await Item.findById(req.params.id);
+
+    if (item === null) {
+      // no results
+      res.redirect(`/`);
+    }
+
+    // success, so render
+    res.render('item_delete', { title: 'Delete Item', item });
+  } catch (error) {
+    next(error);
+  }
 };
 
 // handle item delete POST route
-export const item_delete_post: RequestHandler = (req, res) => {
-  res.send('item_delete_post');
+export const item_delete_post: RequestHandler = async (req, res, next) => {
+  try {
+    const item = Item.findById(req.body.id);
+
+    if (req.params.id !== req.body.id)
+      // mismatched data - re-render page
+      return res.render('item_delete', { title: 'Delete Item', item });
+
+    // delete item object
+    await Item.findByIdAndRemove(req.body.id);
+
+    // success - redirect
+    res.redirect('/');
+  } catch (error) {
+    next(error);
+  }
 };
