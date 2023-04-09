@@ -134,14 +134,77 @@ export const category_create_post: [
 ];
 
 // display update category GET route
-export const category_update_get: RequestHandler = (req, res) => {
-  res.send('category_update_get');
+export const category_update_get: RequestHandler = async (req, res, next) => {
+  try {
+    // get category obj
+    const category = await Category.findById(req.params.id);
+
+    if (category === null) {
+      // no results
+      res.redirect('/');
+    }
+
+    // success, so render
+    res.render('category_form', {
+      title: 'Update Category',
+      category,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 // handle category update POST route
-export const category_update_post: RequestHandler = (req, res) => {
-  res.send('category_update_post');
-};
+export const category_update_post: [
+  ValidationChain,
+  ValidationChain,
+  RequestHandler
+] = [
+  // validate & sanitize fields
+  body('name', 'Name is required.').trim().isLength({ min: 1 }).escape(),
+  body('description', 'Description is required')
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+
+  // process request after validation & sanitization
+  async (req, res, next) => {
+    try {
+      // create Category object with escaped & trimmed data
+      const category = new Category({ ...req.body, _id: req.params.id });
+
+      // extract validation errors from request
+      const errors = validationResult(req);
+
+      if (!errors.isEmpty()) {
+        // there are errors, render form again with sanitized values/ error messages
+        res.render('category_form', {
+          title: 'Update Category',
+          category,
+          errors: errors.array(),
+        });
+        return;
+      }
+      // data from form is valid
+      // check if category already exists
+      const found = await Category.findOne({ name: req.body.name });
+      if (found) {
+        // exists - redirect to category page
+        res.redirect(found.url);
+      } else {
+        // success
+        const theCategory = await Category.findByIdAndUpdate(
+          req.params.id,
+          category,
+          {}
+        );
+        res.redirect(theCategory!.url);
+      }
+    } catch (error) {
+      next(error);
+    }
+  },
+];
 
 // display category delete GET route
 export const category_delete_get: RequestHandler = async (req, res, next) => {
