@@ -2,12 +2,12 @@ extends layout
 
 block content 
   h1= title
-  form(action="", method="post") 
-    label Name
+  form.flex-col(action="", method="post") 
+    label.flex-col Name
       input#name(type="text", name='name', value=(undefined===item ? '' : item.name), required)
-    label Description 
+    label.flex-col Description 
       textarea#description(name="description", required) #{(undefined===item ? '' : item.description)}
-    label Category 
+    label.flex-col Category 
       select#category(name="category" , required)
         option(value="default", disabled, selected) Please select a category 
         each category in categories 
@@ -15,9 +15,9 @@ block content
             option(value=category._id, selected=(item.category._id.toString()===category._id.toString() ? 'selected' : false)) #{category.name}
           else
             option(value=category._id)= category.name
-    label Quantity 
+    label.flex-col Quantity 
       input#stock(type="number", name="stock", value=(undefined===item ? '' : item.stock), required)
-    label Price 
+    label.flex-col Price 
       input#price(type="number", name="price", value=(undefined===item ? '' : item.price), required)
     
     button(type="submit") Submit

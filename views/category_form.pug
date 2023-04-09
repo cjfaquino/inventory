@@ -2,10 +2,10 @@ extends layout
 
 block content 
   h1= title
-  form(action="", method="post") 
-    label Name
+  form.flex-col(action="", method="post") 
+    label.flex-col Name
       input#name(type="text", name='name', value=(undefined===category ? '' : category.name), required)
-    label Description 
+    label.flex-col Description 
       textarea#description(name="description", required)= (undefined===category ? '' : category.description)
     button(type="submit") Submit
 
