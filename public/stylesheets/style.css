@@ -89,3 +89,12 @@ nav > ul > li:first-child {
   display: flex;
   flex-direction: column;
 }
+
+.category-stats {
+  gap: 10px;
+}
+
+.category-stats li:nth-last-child(2) {
+  margin-right: 0;
+  margin-left: auto;
+}
