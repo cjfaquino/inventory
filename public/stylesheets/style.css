@@ -9,7 +9,13 @@
 }
 
 a {
-  color: #00b7ff;
+  color: var(--theme-color);
+  text-decoration: none;
+  transition: opacity 0.2s ease-in-out;
+}
+
+a:hover {
+  opacity: 0.6;
 }
 
 ul {
@@ -60,6 +66,19 @@ button {
   background-color: var(--theme-color);
   padding: 5px 10px;
   font-size: 1rem;
+}
+
+nav > ul {
+  gap: 10px;
+}
+
+nav > ul > li {
+  padding: 10px;
+}
+
+nav > ul > li:first-child {
+  margin-left: auto;
+  margin-right: 0;
 }
 
 .flex {
