@@ -106,14 +106,92 @@ export const item_create_post: [
 ];
 
 // display update item GET route
-export const item_update_get: RequestHandler = (req, res) => {
-  res.send('item_update_get');
+export const item_update_get: RequestHandler = async (req, res, next) => {
+  try {
+    const categoriesPromise = Category.find().sort({ name: 1 });
+    const itemPromise = Item.findById(req.params.id);
+
+    const [categories, item] = await Promise.all([
+      categoriesPromise,
+      itemPromise,
+    ]);
+
+    if (item === null) {
+      // no results
+      res.redirect('/');
+    }
+
+    // success, so render
+    res.render('item_form', { title: 'Update Item', categories, item });
+  } catch (error) {}
 };
 
 // handle item update POST route
-export const item_update_post: RequestHandler = (req, res) => {
-  res.send('item_update_post');
-};
+export const item_update_post: [
+  ValidationChain,
+  ValidationChain,
+  ValidationChain,
+  ValidationChain,
+  ValidationChain,
+  RequestHandler
+] = [
+  // validate & sanitize fields
+  body('name', 'Name is required.').trim().isLength({ min: 1 }).escape(),
+  body('description', 'Description is required.')
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body('stock')
+    .isLength({ min: 1 })
+    .withMessage('Quantity is required.')
+    .isNumeric()
+    .withMessage('Quantity be a number.')
+    .escape(),
+  body('price')
+    .isLength({ min: 1 })
+    .withMessage('Price is required.')
+    .isNumeric()
+    .withMessage('Price be a number.')
+    .escape(),
+  body('category.*').escape(),
+
+  // process request after validation & sanitization
+  async (req, res, next) => {
+    try {
+      const categories = await Category.find().sort({ name: 1 });
+
+      // create Item object with sanitized data & old id
+      const item = new Item({ ...req.body, _id: req.params.id });
+
+      // extract validation errors from request
+      const errors = validationResult(req);
+
+      if (!errors.isEmpty()) {
+        // there are errors, render form again with sanitized values/ error messages
+        res.render('item_form', {
+          title: 'Update Item',
+          categories,
+          item,
+          errors: errors.array(),
+        });
+        return;
+      }
+      // data from form is valid
+      // check if item already exists
+      const found = await Item.findOne({ name: req.body.name });
+      if (found) {
+        // exists - redirect
+        res.redirect(found.url);
+      } else {
+        // success - update
+        const theItem = await Item.findByIdAndUpdate(req.params.id, item, {});
+        res.redirect(theItem!.url);
+      }
+    } catch (error) {
+      next(error);
+    }
+  },
+];
 
 // display item delete GET route
 export const item_delete_get: RequestHandler = async (req, res, next) => {
