@@ -5,6 +5,7 @@ block content
   ul
     each stat in stats 
       li= `${stat.name}: ${stat.number}`
+  a(href=`${category._id}/delete`) Delete category
   section 
     h2 Items
     ul 

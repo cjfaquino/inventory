@@ -7,6 +7,7 @@ import currencyFormat from '../utilities/currencyFormat';
 import quantityFormat from '../utilities/quantityFormat';
 import numberFormat from '../utilities/numberFormat';
 import { ValidationChain, body, validationResult } from 'express-validator';
+import { Query } from 'mongoose';
 
 // display all categories
 export const index: RequestHandler = async (req, res, next) => {
@@ -68,7 +69,12 @@ export const category_detail: RequestHandler = async (req, res, next) => {
     };
 
     // success, so render
-    res.render('category_detail', { title: category.name, items: list, stats });
+    res.render('category_detail', {
+      title: category.name,
+      category,
+      items: list,
+      stats,
+    });
   } catch (error) {
     return next(error);
   }
@@ -138,11 +144,62 @@ export const category_update_post: RequestHandler = (req, res) => {
 };
 
 // display category delete GET route
-export const category_delete_get: RequestHandler = (req, res) => {
-  res.send('category_delete_get');
+export const category_delete_get: RequestHandler = async (req, res, next) => {
+  try {
+    const categoryPromise = Category.findById(req.params.id);
+    const itemsPromise = Item.find({ category: req.params.id });
+    const [category, items] = await Promise.all([
+      categoryPromise,
+      itemsPromise,
+    ]);
+
+    if (category === null) {
+      // no results
+      res.redirect('/');
+    }
+
+    // success, so render
+    res.render('category_delete', {
+      title: 'Delete Category',
+      category,
+      items,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 // handle category delete POST route
-export const category_delete_post: RequestHandler = (req, res) => {
-  res.send('category_delete_post');
+export const category_delete_post: RequestHandler = async (req, res, next) => {
+  try {
+    const categoryPromise = Category.findById(req.body.id);
+    const itemsPromise = Item.find({ category: req.body.id });
+
+    const [category, items] = await Promise.all([
+      categoryPromise,
+      itemsPromise,
+    ]);
+
+    if (req.body.id !== req.params.id || req.body.name !== category!.name)
+      // mismatched data
+      return res.render('category_delete', {
+        title: 'Delete Category',
+        category,
+        items,
+      });
+
+    const promiseArr: Promise<any>[] = [];
+
+    // delete category object & related items
+    items.forEach((item) => {
+      promiseArr.push(Item.findByIdAndRemove(item._id));
+    });
+    const removePromise = Category.findByIdAndRemove(req.body.id);
+    await Promise.all([...promiseArr, removePromise]);
+
+    // success - redirect to home
+    res.redirect('/');
+  } catch (error) {
+    next(error);
+  }
 };
