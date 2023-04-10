@@ -36,7 +36,7 @@ export const index: RequestHandler = async (req, res, next) => {
       totalVal: { name: 'Total Value', number: totalVal },
     };
 
-    res.render('index', { title: 'Store', categories, stats });
+    res.render('index', { title: 'Inventory', categories, stats });
   } catch (error) {
     return next(error);
   }
