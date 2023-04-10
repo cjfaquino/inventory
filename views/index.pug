@@ -2,11 +2,11 @@ extends layout
 
 block content
   h1= title
+  ul.flex.stats
+    each stat in stats 
+      li #{stat.name}: #[strong #{stat.number}]
   if categories 
-    ul 
+    ul.flex-col.categories
       each val in categories
         li 
           a(href=val.url)= val.name
-  ul
-    each stat in stats 
-      li= `${stat.name}: ${stat.number}`
