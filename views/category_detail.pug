@@ -2,7 +2,7 @@ extends layout
 
 block content 
   h1= title
-  ul.flex.category-stats
+  ul.flex.stats.category-detail-stats
     each stat in stats 
       li #{stat.name}: #[strong #{stat.number}]
     li
@@ -11,12 +11,13 @@ block content
       a(href=`${category._id}/delete`) Delete category
   section 
     h2 Items
-    ul 
+    ul.flex-col.items
       each item in items 
         li
-          a(href=item.url)= item.name
+          a.item-link(href=item.url)= item.name
           p= item.description 
-          p Qty: #{item.stock}
-          p= item.price_formatted
+          p Price: #[strong #{item.price_formatted}]
+          p Qty: #[strong #{item.stock}]
+          p Total Value: #[strong #{item.totalVal}] 
       if items.length === 0
         li Currently no items
