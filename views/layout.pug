@@ -4,13 +4,14 @@ html
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
-    header
-      nav
-        ul.flex
+    div.wrapper.flex
+      nav.sidebar
+        ul.flex-col
           li
             a(href="/") Home 
           li 
             a(href="/category/create") Create category
           li 
             a(href="/product/create") Create item
-    block content
+      main
+        block content
