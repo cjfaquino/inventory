@@ -2,13 +2,15 @@ extends layout
 
 block content 
   h1= title
-  p= item.description
-  p= item.price_formatted
-  p= item.stock
-  if item.stock <= 25
-    p= `Only ${item.stock} left!`
-  p= item.totalVal
-  div 
-    a(href=`${item._id}/update`) Update item
-  div 
-    a(href=`${item._id}/delete`) Delete item
+  section
+    p= item.name
+    p= item.description
+    p Price: #[strong #{item.price_formatted}]
+    p Qty: #[strong #{item.stock}]
+    p Total Value: #[strong #{item.totalVal}] 
+  hr
+  section.item-buttons
+    div 
+      a(href=`${item._id}/update`) Update item
+    div 
+      a(href=`${item._id}/delete`) Delete item
