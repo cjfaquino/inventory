@@ -3,11 +3,11 @@ extends layout
 block content 
   h1= `${title} ${category.name}`
 
-  form(action="", method="post") 
+  form.flex-col.del-form(action="", method="post") 
     p This will delete ALL ITEMS with this category. Are you sure you want to delete this category?
 
     input#name(type="text", name="name", placeholder=`Type "${category.name}" to confirm` required)
     input#id(type="hidden", name="id" value=category._id)
 
-    button(type="submit") Delete
+    button.btn-delete(type="submit") Delete
 
